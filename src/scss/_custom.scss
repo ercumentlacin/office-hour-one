@@ -1,0 +1,20 @@
+*,
+*::after,
+*::before {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+$darkreader-neutral-background: #131516;
+$darkreader-neutral-text: #d8d4cf;
+$darkreader-selection-background: #004daa;
+$darkreader-selection-text: #e8e6e3;
+
+body {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  color: $darkreader-selection-text;
+  background-color: $darkreader-neutral-background;
+}
