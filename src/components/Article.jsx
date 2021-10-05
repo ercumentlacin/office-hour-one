@@ -1,5 +1,6 @@
+/* eslint-disable react/prop-types */
 import { useEffect, useReducer } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, withRouter } from 'react-router-dom';
 
 import axios from '.pnpm/axios@0.21.4/node_modules/axios';
 
@@ -36,7 +37,7 @@ function reducer(state, action) {
   }
 }
 
-const Article = () => {
+const Article = ({ history }) => {
   const { articleId } = useParams();
 
   const [state, dispatch] = useReducer(reducer, initialState);
@@ -59,18 +60,44 @@ const Article = () => {
     getPosts();
   }, [articleId]);
 
-  console.log(posts);
+  if (loading)
+    return (
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100vh',
+        }}
+      >
+        loading...
+      </div>
+    );
 
   return (
-    <div>
-      {loading && <div>loading...</div>}
+    <div
+      style={{
+        padding: 10,
+        margin: 10,
+      }}
+    >
       {posts && posts.id}
       <br />
-      {posts && posts.title}
+      <h1>{posts && posts.title}</h1>
+      <p>{posts && posts.body}</p>
+      <button type="button" onClick={() => history.goBack()}>
+        Go Back
+      </button>
+      <button
+        type="button"
+        onClick={() => history.push(`/article/${Number(articleId) + 1}`)}
+      >
+        Next Article
+      </button>
 
       {error && <div>{error}</div>}
     </div>
   );
 };
 
-export default Article;
+export default withRouter(Article);

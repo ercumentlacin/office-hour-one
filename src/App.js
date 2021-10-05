@@ -3,6 +3,7 @@
 import { fetchPosts } from 'agent';
 import Article from 'components/Article';
 import Counter from 'components/Counter';
+import Post from 'components/Post';
 import React, { useEffect, useMemo, useReducer, useState } from 'react';
 import {
   BrowserRouter as Router,
@@ -30,21 +31,41 @@ const initialState = {
   error: null,
 };
 
+// constants
+const LOADING = 'LOADING';
+const ERROR = 'ERROR';
+const SUCCESS = 'SUCCESS';
+
+// actions
+const fullfilled = (data) => ({
+  type: SUCCESS,
+  payload: data,
+});
+const failure = (error) => ({
+  type: ERROR,
+  payload: error,
+});
+const fetching = () => ({
+  type: LOADING,
+});
+
+// REDUCER
 function reducer(state, action) {
   switch (action.type) {
-    case 'LOADING':
+    case LOADING:
       return {
         ...state,
         loading: true,
       };
 
-    case 'ERROR':
+    case ERROR:
       return {
         ...state,
         error: action.payload,
         loading: false,
       };
-    case 'SUCCESS':
+
+    case SUCCESS:
       return {
         ...state,
         data: action.payload,
@@ -64,19 +85,21 @@ const App = () => {
 
   useEffect(() => {
     const getPosts = async () => {
-      dispatch({ type: 'LOADING' });
+      dispatch(fetching());
       try {
         const { data } = await axios(
           'https://jsonplaceholder.typicode.com/posts'
         );
-        dispatch({ type: 'SUCCESS', payload: data });
+        dispatch(fullfilled(data));
       } catch (err) {
-        dispatch({ type: 'ERROR', payload: err });
+        dispatch(failure(err));
       }
     };
 
     getPosts();
   }, []);
+
+  console.log('state', state);
 
   const [count, setCount] = useState(0);
 
@@ -105,7 +128,7 @@ const App = () => {
 
             {loading && <div>loading...</div>}
             {posts.length > 0 &&
-              posts.map((post) => <div key={uuidv4()}>{post.title}</div>)}
+              posts.map((post) => <Post key={uuidv4()} {...post} />)}
 
             {error && <div>{error}</div>}
           </div>
