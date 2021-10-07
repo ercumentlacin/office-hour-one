@@ -13,7 +13,7 @@ const ThemeProvider = ({ children }) => {
     color: theme === 'light' ? '#000' : '#fff',
   };
 
-  const values = { toggleTheme, themeStyle };
+  const values = { theme, toggleTheme, themeStyle };
 
   return (
     <ThemeContext.Provider value={values}>{children}</ThemeContext.Provider>
