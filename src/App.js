@@ -1,16 +1,10 @@
 /* eslint-disable react/button-has-type */
 /* eslint-disable no-unused-vars */
-import { fetchPosts } from 'agent';
 import Article from 'components/Article';
 import Counter from 'components/Counter';
-import React, { useEffect, useMemo, useReducer, useState } from 'react';
-import {
-  BrowserRouter as Router,
-  Link,
-  Route,
-  Switch,
-  useHistory,
-} from 'react-router-dom';
+import { useThemeContext } from 'context/ThemeContext';
+import React, { useEffect, useReducer, useState } from 'react';
+import { BrowserRouter as Router, Link, Route, Switch } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 
 import axios from '.pnpm/axios@0.21.4/node_modules/axios';
@@ -96,11 +90,17 @@ const App = () => {
   const handleChange = ({ target }) =>
     setPerson((prev) => ({ ...prev, name: target.value }));
 
+  const { toggleTheme, themeStyle } = useThemeContext();
+
   return (
     <Router>
       <Switch>
         <Route path="/" exact>
-          <div>
+          <div style={themeStyle}>
+            <div>
+              <button onClick={toggleTheme}>Toggle Theme</button>
+            </div>
+
             <Link to="/counter">Counter</Link>
 
             {loading && <div>loading...</div>}
